@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.kang.limine">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".LogoActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Main2Activity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Admit" />
+        <activity android:name=".Cart" />
+        <activity android:name=".Itemlist" />
+        <activity android:name=".Changeadd" />
+        <activity android:name=".Join" />
+        <activity android:name=".Path"/>
+        <activity android:name=".Myinfo" />
+        <activity android:name=".Search" />
+        <activity android:name=".Searchid" />
+        <activity android:name=".Searchpass" />
+        <activity android:name=".Service" />
+        <activity android:name=".Noticeboard" />
+        <activity android:name=".Coupon" />
+        <activity android:name=".Parking" />
+        <activity android:name=".BeaconMainActivity" />
+        <activity android:name=".RecoMonitoringActivity" />
+        <activity android:name=".RecoRangingActivity"></activity>
+        <service android:name="com.perples.recosdk.RECOBeaconService" />
+        <service android:name=".RecoBackgroundMonitoringService" />
+        <service android:name=".RecoBackgroundRangingService"/>
+    </application>
+    <uses-sdk android:minSdkVersion="9" />
+</manifest>

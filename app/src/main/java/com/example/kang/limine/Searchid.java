@@ -1,0 +1,143 @@
+package com.example.kang.limine;
+
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class Searchid extends URLConnect{
+
+    EditText editText1, editText2;
+    private static final String TAG_RESULTS="result";
+    private static final String TAG_NAME = "name";
+    private static final String TAG_PHONE = "phone";
+    private static final String TAG_ID="id";
+
+    String myJSON;
+    JSONArray peoples = null;
+    ArrayList<HashMap<String, String>> personList;
+    int check = 1 ;
+    TextView textView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_searchid);
+        personList = new ArrayList<HashMap<String,String>>();
+        editText1 = (EditText)findViewById(R.id.searchidname);
+        editText2 = (EditText)findViewById(R.id.searchidphone);
+        textView = (TextView)findViewById(R.id.findid);
+    }
+
+    public void searchid(View v) {
+        switch(check){
+            case 1:
+                getData(urlsearchid);
+                break;
+            case 2:
+                Toast.makeText(getApplicationContext(), "정확한 정보를 입력해 주세요", Toast.LENGTH_LONG).show();
+                check = 1 ;
+                break;
+        }
+    }
+
+    public void getData(String url){
+        class GetDataJSON extends AsyncTask<String, Void, String> {
+
+            @Override
+            protected String doInBackground(String... params) {
+
+                String uri = params[0];
+
+                BufferedReader bufferedReader = null;
+                try {
+                    URL url = new URL(uri);
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    StringBuilder sb = new StringBuilder();
+                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+                    String json;
+                    while((json = bufferedReader.readLine())!= null){
+                        sb.append(json+"\n");
+                    }
+
+                    return sb.toString().trim();
+
+                }catch(Exception e){
+                    return null;
+                }
+            }
+            @Override
+            protected void onPostExecute(String result){
+                myJSON=result;
+                showList();
+            }
+        }
+        GetDataJSON g = new GetDataJSON();
+        g.execute(url);
+    }
+
+    protected void showList(){
+        try {
+            JSONObject jsonObj = new JSONObject(myJSON);
+            peoples = jsonObj.getJSONArray(TAG_RESULTS);
+            String Fname = editText1.getText().toString();
+            String Fphone = editText2.getText().toString();
+
+            for(int i=0;i<peoples.length();i++) {
+
+                JSONObject c = peoples.getJSONObject(i);
+
+                String phone = c.getString(TAG_PHONE);
+                String name = c.getString(TAG_NAME);
+                String id = c.getString(TAG_ID);
+
+                HashMap<String, String> persons = new HashMap<String, String>();
+
+                persons.put(TAG_PHONE, phone);
+                persons.put(TAG_NAME, name);
+                persons.put(TAG_ID,id);
+
+                personList.add(persons);
+
+                if(Fname.equals(name) && Fphone.equals(phone)){
+                    println("\n'"+name+"' 님의 이름으로 가입된 \n 아이디는 '"+id+"' 입니다");
+                    check = 1;
+                }else{
+                    check =2 ;
+                }
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void println(String data){
+        textView.append(data + "\n");
+    }
+    public void gologin(View v){
+        Intent intent = new Intent (getApplication(), MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void gofindpass(View v){
+        Intent intent = new Intent (getApplication(), Searchpass.class);
+        startActivity(intent);
+    }
+}
